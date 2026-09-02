@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_order_form_sale_cpe" model="ir.ui.view">
+            <field name="name">sale.order.form.cpe</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/list/field[@name='tax_id']" position="before">
+                    <field name="pe_affectation_code" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Vista para ocultar botones de envío según permiso -->
+        <record id="view_order_form_hide_send_buttons" model="ir.ui.view">
+            <field name="name">sale.order.form.hide.send.buttons</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <field name="hide_send_buttons" invisible="1"/>
+                </xpath>
+                <xpath expr="//button[@name='action_quotation_send']" position="attributes">
+                    <attribute name="invisible">hide_send_buttons</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_preview_sale_order']" position="attributes">
+                    <attribute name="invisible">hide_send_buttons</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="discount_sale_view_form" model="ir.ui.view">
+            <field name="name">discount.sale.order.solse.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_discount_total.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='discount_type']" position="before">
+                    <field name="descuento_global" />
+                </xpath>
+
+                <xpath expr="//field[@name='discount_type']" position="attributes">
+                    <attribute name="invisible">not descuento_global</attribute>
+                    <attribute name="string">Tipo de descuento</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='discount_rate']" position="attributes">
+                    <attribute name="invisible">not descuento_global</attribute>
+                    <attribute name="string">Tarifa de descuento</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="discount_account_invoice_view_form" model="ir.ui.view">
+            <field name="name">discount.account.invoice.solse.discount</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="sale_discount_total.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='narration']" position="before">
+                    <field name="descuento_global" />
+                </xpath>
+
+                <xpath expr="//field[@name='discount_type']" position="attributes">
+                    <attribute name="invisible">not descuento_global</attribute>
+                    <attribute name="string">Tipo de descuento</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='discount_rate']" position="attributes">
+                    <attribute name="invisible">not descuento_global</attribute>
+                    <attribute name="string">Tarifa de descuento</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Vista para ocultar páginas de notebook en sale.order -->
+        <record id="view_order_form_hide_notebook_pages" model="ir.ui.view">
+            <field name="name">sale.order.form.hide.notebook.pages</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="priority">101</field>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='optional_products']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='customer_signature']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

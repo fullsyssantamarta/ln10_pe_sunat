@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Backups / temporales
+*.bak
+*.bak-*
+*.backup
+*.backup2
+*.orig
+*.swp
+.DS_Store
+
+# Certificados / secretos (nunca subir)
+*.pfx
+*.p12
+*.pem
+*.key
+*.crt
+*.cer

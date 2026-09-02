@@ -1,0 +1,119 @@
+<odoo>
+	<data>
+		<record model="ir.ui.view" id="view_warehouse">
+			<field name="name">stock.warehouse.form.inherit.solse.cpe.sunat.eguide</field>
+			<field name="model">stock.warehouse</field>
+			<field name="inherit_id" ref="stock.view_warehouse" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<field name="eguide_sequence_id" groups="solse_pe_cpe.group_solse_pe_cpe_manager" />
+				</xpath>
+
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_company_form">
+			<field name="name">stock.picking.form.inherit.solse.cpe.sunat.eguide</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//button[@name='button_scrap']" position="after">
+					<button name="action_generate_eguide" string="Generar Guía Electronica" type="object"
+						invisible="not pe_is_eguide or pe_guide_state in ['send','verify','done']"
+						groups="solse_pe_cpe.group_solse_pe_cpe_user" />
+					<button name="action_cancel_eguide" string="Cancelar Guía Electronica" type="object" invisible="1" />
+				</xpath>
+				<xpath expr="//page[@name='extra']" position="after">
+					<page string="Personalización Peruana" name="peruvian_customization" invisible="state != 'done'">
+						<group>
+							<group>
+								<field name="pe_is_eguide" readonly="pe_guide_number != '/'" />
+								<field name="pe_guide_id" groups="solse_pe_cpe.group_solse_pe_cpe_user" invisible="pe_is_eguide != '/'" readonly="1" />
+								<field name="pe_response" invisible="not pe_is_eguide" readonly="1" />
+								<field name="pe_note" invisible="not pe_is_eguide" readonly="1" />
+							</group>
+							<group>
+								<field name="pe_guide_number" invisible="not pe_is_eguide" readonly="1" />
+								<field name="pe_voided_id" groups="solse_pe_cpe.group_solse_pe_cpe_user" invisible="1" />
+								<field name="pe_error_code" invisible="not pe_is_eguide" readonly="1" />
+								<field name="pe_guide_state" invisible="1" />
+
+							</group>
+						</group>
+						<group string="Información de la guía electrónica" groups="solse_pe_cpe.group_solse_pe_cpe_user">
+							<group>
+								<field name="pe_transfer_code"
+									required="pe_is_eguide"
+									readonly="pe_guide_number != '/'"
+									groups="solse_pe_cpe.group_solse_pe_cpe_user" />
+								<field name="pe_gross_weight"
+									required="pe_is_eguide"
+									readonly="pe_guide_number != '/'"
+									groups="solse_pe_cpe.group_solse_pe_cpe_user" />
+								<field name="pe_unit_quantity"
+									required="pe_transfer_code == '08'"
+									readonly="pe_guide_number != '/'"
+									groups="solse_pe_cpe.group_solse_pe_cpe_user" />
+								<field name="supplier_id"
+									domain="[('supplier_rank','=',1), ('parent_id', '=', False)]"
+									readonly="pe_guide_number != '/'"
+									groups="solse_pe_cpe.group_solse_pe_cpe_user" />
+							</group>
+							<group>
+								<field name="pe_is_realeted"
+									readonly="pe_guide_number != '/'"
+									groups="solse_pe_cpe.group_solse_pe_cpe_user" />
+								<field name="pe_related_number"
+									invisible="not pe_is_realeted"
+									required="pe_is_realeted"
+									readonly="pe_guide_number != '/'"
+									groups="solse_pe_cpe.group_solse_pe_cpe_user" />
+								<field name="pe_related_code"
+									invisible="not pe_is_realeted"
+									required="pe_is_realeted"
+									readonly="pe_guide_number != '/'"
+									groups="solse_pe_cpe.group_solse_pe_cpe_user" />
+								<field name="pe_is_programmed"
+									readonly="pe_guide_number != '/'"
+									groups="solse_pe_cpe.group_solse_pe_cpe_user" />
+								<field name="pe_transport_mode"
+									required="pe_is_eguide"
+									readonly="pe_guide_number != '/'"
+									groups="solse_pe_cpe.group_solse_pe_cpe_user" />
+								<field name="pe_carrier_id"
+									invisible="pe_transport_mode not in ['01']"
+									required="pe_transport_mode == '01'"
+									readonly="pe_guide_number != '/'"
+									groups="solse_pe_cpe.group_solse_pe_cpe_user" />
+							</group>
+						</group>
+						<field name="pe_fleet_ids" nolabel="1" widget="one2many_list" mode="tree"
+							invisible="pe_transport_mode not in ['02']"
+							readonly="pe_guide_number != '/'"
+							groups="solse_pe_cpe.group_solse_pe_cpe_user">
+							<list string="Líneas de factura" editable="bottom">
+								<field name="fleet_id" string="Vehículo" />
+								<field name="name" string="Placa"/>
+								<field name="driver_id" string="Conductor"/>
+								<field name="is_main" />
+							</list>
+						</field>
+						<div>
+							<label for="pe_digest" string="Valor de codigo:" invisible="not pe_is_eguide" />
+							<field name="pe_digest" invisible="not pe_is_eguide" readonly="1" />
+						</div>
+						<div>
+							<label for="pe_signature" string="Valor de la firma:" invisible="not pe_is_eguide" />
+						</div>
+						<div>
+							<field name="pe_signature" invisible="not pe_is_eguide" readonly="1" />
+						</div>
+					</page>
+				</xpath>
+
+			</field>
+		</record>
+
+	</data>
+</odoo>

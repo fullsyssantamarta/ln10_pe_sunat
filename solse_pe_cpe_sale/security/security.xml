@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="group_hide_sale_send_buttons" model="res.groups">
+            <field name="name">Ocultar botones de envío en ventas</field>
+            <field name="comment">Si el usuario tiene este permiso, se ocultan los botones "Enviar por correo" y "Vista previa" en los pedidos de venta.</field>
+            <field name="category_id" ref="base.module_category_sales_sales"/>
+        </record>
+    </data>
+</odoo>

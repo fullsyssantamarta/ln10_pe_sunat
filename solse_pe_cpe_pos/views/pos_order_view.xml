@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_pos_pos_form">
+            <field name="name">pos.order.form</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form" />
+            <field name="arch" type="xml">
+
+			    <xpath expr="//field[@name='fiscal_position_id']" position="after">
+			    	<field name="pe_invoice_type" invisible="1" />
+			        <field name="l10n_latam_document_type_id"  />
+			    </xpath>
+			    <xpath expr="//button[@name='action_pos_order_invoice']" position="attributes">
+			    	<attribute name="invisible">0</attribute>
+			    </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

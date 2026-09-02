@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<template id="solse_pe_cpe_sale.report_saleorder_ticket">
+		<t t-set="o" t-value="doc.with_context(lang=doc.partner_id.lang)" />
+
+		<div class="article pos-sale-ticket"
+			style="font-family: 'Courier New', monospace; width: 100%; max-width: 80mm; margin: 0 auto; padding: 5px;">
+			<div class="pos-sale-ticket">
+				<!-- LOGO Y NOMBRE DE EMPRESA -->
+				<div style="text-align: center; margin-bottom: 10px;">
+					<t t-if="o.company_id.logo">
+						<img t-att-src="image_data_uri(o.company_id.logo)" alt="Logo"
+							style="max-height: 110px; width: auto; max-width: 180px; display: block; margin: 0 auto 8px auto;" />
+					</t>
+					<div class="pos-receipt-contact" style="font-size: 14px;">
+						<div style="font-weight: bold; margin-bottom: 2px;">
+							<t t-esc="o.company_id.name" />
+						</div>
+						<t t-if="o.company_id.vat">
+							<div style="font-size: 12px; margin-bottom: 2px;"> RUC: <t t-esc="o.company_id.vat" />
+							</div>
+						</t>
+						<t t-if="o.company_id.street">
+							<div style="font-size: 12px; margin-bottom: 2px;">
+								<t t-esc="o.company_id.street" />
+							</div>
+						</t>
+						<t t-if="o.company_id.phone">
+							<div style="font-size: 12px;"> Tel: <t t-esc="o.company_id.phone" />
+							</div>
+						</t>
+					</div>
+				</div>
+
+				<!-- SEPARADOR -->
+				<div style="border-top: 2px dashed #000; margin: 8px 0;"></div>
+
+				<!-- TIPO Y NUMERO DE ORDEN -->
+				<div style="text-align: center; margin: 10px 0;">
+					<div style="font-size: 15px; font-weight: bold; margin-bottom: 4px;">
+						ORDEN DE VENTA
+					</div>
+					<div style="font-size: 15px; font-weight: bold;">
+						<t t-esc="o.name" />
+					</div>
+				</div>
+
+				<!-- SEPARADOR -->
+				<div style="border-top: 2px dashed #000; margin: 8px 0;"></div>
+
+				<!-- INFORMACIÓN DE FECHA Y USUARIO -->
+				<div style="font-size: 14px; margin-bottom: 8px;">
+					<div style="margin-bottom: 3px;">
+						<strong>Fecha y hora:</strong>
+						<t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')" />
+					</div>
+					<t t-if="o.commitment_date">
+						<div style="margin-bottom: 3px;">
+							<strong>Fecha Entrega:</strong>
+							<t t-esc="context_timestamp(o.commitment_date).strftime('%Y-%m-%d %H:%M')" />
+						</div>
+					</t>
+					<div style="margin-bottom: 3px;">
+						<strong>Usuario:</strong>
+						<t t-esc="o.user_id.name" />
+					</div>
+				</div>
+
+				<!-- SEPARADOR -->
+				<div style="border-top: 1px dashed #000; margin: 8px 0;"></div>
+
+				<!-- DATOS DEL CLIENTE -->
+				<div style="font-size: 14px; margin-bottom: 8px;">
+					<div style="font-weight: bold; margin-bottom: 3px; font-size: 14px;">DATOS DEL CLIENTE</div>
+					<div style="margin-bottom: 2px;">
+						<strong>Nombre:</strong>
+						<t t-esc="o.partner_id.name" />
+					</div>
+					<div style="margin-bottom: 2px;">
+						<strong>
+							<t t-if="o.partner_id.doc_type=='6'">RUC:</t>
+							<t t-elif="o.partner_id.doc_type=='1'">DNI:</t>
+							<t t-elif="o.partner_id.doc_type=='4'">Carnet Ext.:</t>
+							<t t-else="">Documento:</t>
+						</strong>
+						<t t-esc="o.partner_id.doc_number or o.partner_id.vat or '-'" />
+					</div>
+					<t t-if="o.partner_id.phone or o.partner_id.mobile">
+						<div style="margin-bottom: 2px;">
+							<strong>Teléfono:</strong>
+							<t t-if="o.partner_id.phone">
+								<t t-esc="o.partner_id.phone" />
+							</t>
+							<t t-if="o.partner_id.phone and o.partner_id.mobile"> / </t>
+							<t t-if="o.partner_id.mobile">
+								<t t-esc="o.partner_id.mobile" />
+							</t>
+						</div>
+					</t>
+				</div>
+
+				<!-- SEPARADOR -->
+				<div style="border-top: 2px dashed #000; margin: 8px 0;"></div>
+
+				<!-- PRODUCTOS -->
+				<table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+					<thead>
+						<tr style="border-bottom: 1px solid #000;">
+							<th style="text-align: left; padding: 3px 1px; width: 40%; font-weight: bold;">
+								PRODUCTO</th>
+							<th style="text-align: center; padding: 3px 1px; width: 15%; font-weight: bold;">CANT.</th>
+							<th style="text-align: right; padding: 3px 1px; width: 20%; font-weight: bold;">P.U.</th>
+							<th style="text-align: right; padding: 3px 1px; width: 25%; font-weight: bold;">TOTAL</th>
+						</tr>
+					</thead>
+					<tbody>
+						<t t-foreach="o.order_line" t-as="line">
+							<!-- Líneas de producto normales -->
+							<t t-if="line.display_type not in ('line_section', 'line_note')">
+								<tr style="border-bottom: 1px dotted #ccc;">
+									<td style="text-align: left; padding: 3px 1px;">
+										<t t-esc="line.name" />
+									</td>
+									<td style="text-align: center; padding: 3px 1px;">
+										<t t-esc="'%.2f' % line.product_uom_qty" />
+									</td>
+									<td style="text-align: right; padding: 3px 1px;">
+										<t t-esc="'%.2f' % line.price_unit" />
+									</td>
+									<td style="text-align: right; padding: 3px 1px;">
+										<strong>
+											<t t-esc="'%.2f' % line.price_subtotal" />
+										</strong>
+									</td>
+								</tr>
+							</t>
+							<!-- Secciones y notas -->
+							<t t-if="line.display_type in ('line_section', 'line_note')">
+								<tr>
+									<td colspan="4" style="padding: 3px 1px; font-style: italic;">
+										<t t-esc="line.name" />
+									</td>
+								</tr>
+							</t>
+						</t>
+					</tbody>
+				</table>
+
+				<!-- SEPARADOR -->
+				<div style="border-top: 2px dashed #000; margin: 8px 0;"></div>
+
+				<!-- TOTALES -->
+				<table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+					<tbody>
+						<!-- Subtotal -->
+						<tr>
+							<td style="text-align: left; padding: 2px 0; width: 60%;">OP. GRAVADAS:</td>
+							<td style="text-align: right; padding: 2px 0; width: 40%;">
+								<t t-esc="o.currency_id.symbol" />
+								<t t-esc="'%.2f' % o.amount_untaxed" />
+							</td>
+						</tr>
+
+						<!-- Impuestos -->
+						<tr>
+							<td style="text-align: left; padding: 2px 0;">IGV (18%):</td>
+							<td style="text-align: right; padding: 2px 0;">
+								<t t-esc="o.currency_id.symbol" />
+								<t t-esc="'%.2f' % o.amount_tax" />
+							</td>
+						</tr>
+
+						<!-- SEPARADOR ANTES DEL TOTAL -->
+						<tr>
+							<td colspan="2" style="padding: 0;">
+								<div style="border-top: 1px solid #000; margin: 5px 0;"></div>
+							</td>
+						</tr>
+
+						<!-- Total a Pagar -->
+						<tr>
+							<td style="text-align: left; padding: 4px 0; font-size: 14px;">
+								<strong>TOTAL A PAGAR:</strong>
+							</td>
+							<td style="text-align: right; padding: 4px 0; font-size: 14px;">
+								<strong>
+									<t t-esc="o.currency_id.symbol" />
+									<t t-esc="'%.2f' % o.amount_total" />
+								</strong>
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+
+				<!-- SEPARADOR -->
+				<div style="border-top: 2px dashed #000; margin: 8px 0;"></div>
+
+				<!-- MONTO EN LETRAS -->
+				<div style="font-size: 12px; text-align: center; margin-bottom: 10px;">
+					<strong>SON: </strong>
+					<t t-esc="o.currency_id.amount_to_text(o.amount_total)" />
+				</div>
+
+				<!-- SEPARADOR FINAL -->
+				<div style="border-top: 2px dashed #000; margin: 10px 0;"></div>
+
+				<!-- MENSAJE DE AGRADECIMIENTO -->
+				<div style="text-align: center; font-size: 13px; margin: 10px 0;">
+					<strong>¡GRACIAS POR SU PREFERENCIA!</strong>
+				</div>
+
+			</div>
+		</div>
+	</template>
+
+
+	<template id="solse_pe_cpe_sale.sale_ticket_print">
+		<t t-call="web.html_container">
+			<t t-foreach="docs" t-as="doc">
+				<t t-call="solse_pe_cpe_sale.report_saleorder_ticket" t-lang="doc.partner_id.lang" />
+			</t>
+		</t>
+	</template>
+
+	<record id="paperformat_ticket_pedido" model="report.paperformat">
+		<field name="name">Ticket Pedido</field>
+		<field name="default" eval="True" />
+		<field name="format">custom</field>
+		<field name="page_height">230</field>
+		<field name="page_width">80</field>
+		<field name="orientation">Portrait</field>
+		<field name="margin_top">1</field>
+		<field name="margin_bottom">1</field>
+		<field name="margin_left">1</field>
+		<field name="margin_right">1</field>
+		<field name="header_line" eval="False" />
+		<field name="dpi">90</field>
+	</record>
+
+	<record id="report_invoice_ticket" model="ir.actions.report">
+		<field name="name">Ticket</field>
+		<field name="model">sale.order</field>
+		<field name="report_type">qweb-pdf</field>
+		<field name="report_name">solse_pe_cpe_sale.sale_ticket_print</field>
+		<field name="report_file">solse_pe_cpe_sale.sale_ticket_print</field>
+		<field name="print_report_name">'Ticket - %s' % (object.name)</field>
+		<field name="binding_model_id" ref="sale.model_sale_order" />
+		<field name="binding_type">report</field>
+		<field name="paperformat_id" ref="solse_pe_cpe_sale.paperformat_ticket_pedido" />
+	</record>
+
+</odoo>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template_client" xml:space="preserve">
+    <!-- In Odoo 18, partner editing in POS uses a backend form view.
+         The custom Peru fields (doc_number, l10n_latam_identification_type_id,
+         state_id, city_id, l10n_pe_district) are already present on the
+         standard res.partner form used by the POS action. -->
+</templates>

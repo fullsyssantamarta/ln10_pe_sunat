@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Secuencia para Resumen de Boletas (RC) -->
+        <record id="sequence_pe_sunat_cpe_rc" model="ir.sequence">
+            <field name="name">Resumen de Boletas</field>
+            <field name="code">pe.sunat.cpe.rc</field>
+            <field name="prefix">RC-%(range_year)s%(range_month)s%(range_day)s-</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="use_date_range">True</field>
+            <field name="implementation">standard</field>
+        </record>
+
+        <!-- Secuencia para Comunicación de Baja (RA) -->
+        <record id="sequence_pe_sunat_cpe_ra" model="ir.sequence">
+            <field name="name">Comunicación de Baja</field>
+            <field name="code">pe.sunat.cpe.ra</field>
+            <field name="prefix">RA-%(range_year)s%(range_month)s%(range_day)s-</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="use_date_range">True</field>
+            <field name="implementation">standard</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+    	<record id="cpe_production_server" model="cpe.server">
+            <field name="name">Guia Electronica Produccion</field>
+            <field name="url">https://e-guiaremision.sunat.gob.pe/ol-ti-itemision-guia-gem/billService</field>
+            <field name="es_guia">True</field>
+        </record>
+        <!--<record id="cpe_dev_server" model="cpe.server">
+            <field name="name">Guia Electronica  Desarrollo</field>
+            <field name="url">https://e-beta.sunat.gob.pe/ol-ti-itemision-guia-gem-beta/billService</field>
+            <field name="user">MODDATOS</field>
+            <field name="password">moddatos</field>
+        </record>-->
+        
+        <record id="eguide_sequence" model="ir.sequence">
+            <field name="name">Guia Electronica</field>
+            <field name="code">pe.eguide.sync</field>
+            <field name="prefix">T001-</field>
+            <field name="implementation">no_gap</field>
+            <field name="padding">5</field>
+        </record>
+        
+        <record id="eguide_cancel_sequence" model="ir.sequence">
+            <field name="name">Guia Electronica</field>
+            <field name="code">pe.eguide.cancel</field>
+            <field name="prefix">EG01-</field>
+            <field name="implementation">no_gap</field>
+            <field name="padding">0</field>
+        </record>
+        
+        
+
+    </data>
+
+    <data noupdate="0">
+        <record id="recalcular_origen_devolucion_guias" model="ir.cron">
+            <field name="name">Recalcular Origen (Devolución de Guía)</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">0</field>
+            <field name="doall" eval="False" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="state">code</field>
+            <field name="model_id" ref="stock.model_stock_picking" />
+            <field name="code">model.tp_recalcular_origen()</field>
+            <field name="active" eval="False" />
+        </record>
+    </data>
+</openerp>

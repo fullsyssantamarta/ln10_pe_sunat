@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="solse_pe_cpe.cpe_body_print">
+			<t t-if="not company">
+				<t t-if="company_id">
+					<t t-set="company" t-value="company_id" />
+				</t>
+				<t t-elif="o and 'company_id' in o">
+					<t t-set="company" t-value="o.company_id.sudo()" />
+				</t>
+				<t t-else="else">
+					<t t-set="company" t-value="res_company" />
+				</t>
+			</t>
+
+			<div class="header" t-att-style="report_header_style">
+				<div class="row">
+					<div class="col-7" style="font-size: 13px;">
+						<img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+							style="max-height: 80px; max-width: 100%; display: block; margin-bottom: 5px;"
+							alt="Logo" />
+						<div style="text-transform: uppercase; font-weight: bold; font-size: 13px;">
+							<t t-esc="company.name" />
+						</div>
+						<div>
+							<t t-esc="company.street" /><br />
+							<t t-if="company.partner_id.l10n_pe_district"
+								t-esc="company.partner_id.l10n_pe_district.name" />, <t t-if="company.state_id"
+								t-esc="company.state_id.name" />, <t t-if="company.city" t-esc="company.city" /><br />
+							<span
+								t-if="company.phone">Telf.: <t t-esc="company.phone" /></span>
+							<span
+								t-if="company.email"> | Email: <t t-esc="company.email" /></span>
+						</div>
+					</div>
+					<div class="col-5">
+						<div class="nro-cpe-premium">
+							<h4 style="font-size: 18px;">RUC: <t t-esc="company.vat" /></h4>
+							<h4 style="text-transform: uppercase; font-size: 20px; color: #444;">
+								<t t-esc="o.pe_doc_name or 'Comprobante'" />
+							</h4>
+							<h4 style="font-size: 22px; font-weight: bold;">
+								<t t-if="o.l10n_latam_document_number" t-esc="o.l10n_latam_document_number" />
+								<t t-else="" t-esc="o.name" />
+							</h4>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="article factura" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+				<t t-set="o" t-value="o.with_context(lang=lang)" />
+				<div class="page">
+					<div class="text-center" style="width: 100%; margin-bottom: 5px;">
+						<h2 t-if="o.state == 'cancel'" style="color: #999; font-weight: bold;">FACTURA CANCELADA</h2>
+						<h2 t-if="o.state == 'annul'" style="color: #999; font-weight: bold;">FACTURA ANULADA</h2>
+					</div>
+
+					<!-- Customer Information Section -->
+					<div class="box-rounded">
+						<div class="row" style="font-size: 13px;">
+							<div class="col-8">
+								<strong style="margin-bottom: 5px; display: block;">DATOS
+									DEL CLIENTE</strong>
+								<div class="row">
+									<div class="col-3">
+										<strong>RUC</strong>
+									</div>
+									<div class="col-9">: <span t-field="o.partner_id.doc_number" /></div>
+								</div>
+								<div class="row">
+									<div class="col-3">
+										<strong>DENOMINACIÓN</strong>
+									</div>
+									<div class="col-9">: <span t-field="o.partner_id.name" /></div>
+								</div>
+								<div class="row">
+									<div class="col-3">
+										<strong>DIRECCIÓN</strong>
+									</div>
+									<div class="col-9">: <span t-field="o.partner_id.street" />
+										<t
+											t-if="o.partner_id.l10n_pe_district"> - <t
+												t-esc="o.partner_id.l10n_pe_district.name" /></t>
+										<t t-if="o.partner_id.city">
+										- <t t-esc="o.partner_id.city" /></t>
+										<t t-if="o.partner_id.state_id"> - <t
+												t-esc="o.partner_id.state_id.name" /></t>
+									</div>
+								</div>
+							</div>
+							<div class="col-4">
+								<div class="row" style="margin-top: 20px;">
+									<div class="col-6">
+										<strong>FECHA EMISIÓN</strong>
+									</div>
+									<div class="col-6">: <span t-field="o.invoice_date" /></div>
+								</div>
+								<div class="row">
+									<div class="col-6">
+										<strong>FECHA DE VENC.</strong>
+									</div>
+									<div class="col-6">: <span t-field="o.invoice_date_due" /></div>
+								</div>
+								<div class="row">
+									<div class="col-6">
+										<strong>MONEDA</strong>
+									</div>
+									<div class="col-6">: <span t-field="o.currency_id.currency_unit_label" /></div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Invoice Lines table -->
+					<table class="table-premium">
+						<thead>
+							<tr>
+								<th style="width: 8%;">CANT.</th>
+								<th style="width: 8%;">UM</th>
+								<th style="width: 12%;">CÓD.</th>
+								<th style="width: 40%;">DESCRIPCIÓN</th>
+								<th style="width: 10%;">V/U</th>
+								<th style="width: 10%;">P/U</th>
+								<th style="width: 12%;">IMPORTE</th>
+							</tr>
+						</thead>
+						<tbody class="invoice_tbody">
+							<t t-set="lines"
+								t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)" />
+							<t t-foreach="lines" t-as="line">
+								<tr
+									t-att-class="'font-weight-bold' if line.display_type in ['line_section', 'line_note'] else ''">
+									<t t-if="line.display_type not in ['line_section', 'line_note']">
+										<td class="text-center">
+											<span t-field="line.quantity" />
+										</td>
+										<td class="text-center">
+											<span t-field="line.product_uom_id.name" />
+										</td>
+										<td class="text-center">
+											<span t-field="line.product_id.default_code" />
+										</td>
+										<td class="text-left">
+											<span t-field="line.name" />
+										</td>
+										<td class="text-right">
+											<span
+												t-esc="'%.3f' % (line.price_subtotal / line.quantity if line.quantity else 0)" />
+										</td>
+										<td class="text-right">
+											<span
+												t-esc="'%.3f' % (line.price_total / line.quantity if line.quantity else 0)" />
+										</td>
+										<td class="text-right">
+											<span t-field="line.price_total" />
+										</td>
+									</t>
+									<t t-else="">
+										<td colspan="7">
+											<span t-field="line.name" />
+										</td>
+									</t>
+								</tr>
+							</t>
+							<!-- Fill empty rows for aesthetic if needed, but Odoo reports usually just end -->
+						</tbody>
+					</table>
+
+					<!-- Totals Section -->
+					<div class="row mt16">
+						<div class="col-7">
+							<!-- Payment Terms or Other Info if needed -->
+							<t t-if="o.tipo_transaccion == 'credito'">
+								<div
+									style="font-size: 10px; border: 1px solid #444; border-radius: 5px; padding: 5px;">
+									<strong>INFORMACIÓN DE PAGO: CRÉDITO</strong>
+									<table class="table table-sm mb-0">
+										<thead>
+											<tr>
+												<th style="font-size: 9px;">CUOTA</th>
+												<th style="font-size: 9px;">IMPORTE</th>
+												<th style="font-size: 9px;">VENCIMIENTO</th>
+											</tr>
+										</thead>
+										<tbody>
+											<t t-set="contador" t-value="0" />
+											<t t-foreach="o.obtener_cuotas_pago()" t-as="cuota">
+												<t t-set="contador" t-value="contador + 1" />
+												<tr>
+													<td>
+														<t t-esc="'{0:02d}'.format(contador)" />
+													</td>
+													<td>
+														<span t-esc="o.currency_id.format(cuota['amount'])" />
+													</td>
+													<td>
+														<span t-esc="cuota['date_maturity']" />
+													</td>
+												</tr>
+											</t>
+										</tbody>
+									</table>
+								</div>
+							</t>
+						</div>
+						<div class="col-5">
+							<div class="detalles-precio-premium detalles-precio">
+								<div class="row no-gutters">
+									<div class="col-7 text-right">
+										<strong>GRAVADA</strong>
+									</div>
+									<div class="col-2 text-center">
+										<t t-esc="o.currency_id.symbol" />
+									</div>
+									<div class="col-3 text-right">
+										<span t-field="o.total_operaciones_gravadas"
+											t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+											t-options-label="None" />
+									</div>
+								</div>
+								<t t-set="tax_totals" t-value="o.tax_totals" />
+								<t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+									<t t-foreach="subtotal.get('tax_groups', [])" t-as="amount_by_group">
+										<div class="row no-gutters">
+											<div class="col-7 text-right">
+												<strong
+													t-esc="amount_by_group.get('tax_group_name', amount_by_group.get('group_name'))" />
+											</div>
+											<div class="col-2 text-center">
+												<t t-esc="o.currency_id.symbol" />
+											</div>
+											<div class="col-3 text-right">
+												<span
+													t-esc="'%.2f' % amount_by_group.get('tax_group_amount', amount_by_group.get('tax_amount'))" />
+											</div>
+										</div>
+									</t>
+								</t>
+								<div class="row no-gutters" id="tr_total"
+									style="font-size: 14px; margin-top: 5px; border-top: 1px solid #444; padding-top: 5px;">
+									<div class="col-7 text-right">
+										<strong>TOTAL</strong>
+									</div>
+									<div class="col-2 text-center">
+										<t t-esc="o.currency_id.symbol" />
+									</div>
+									<div class="col-3 text-right">
+										<strong t-esc="'%.2f' % o.amount_total" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Labels box -->
+					<div class="total-box mt16" style="font-size: 13px;">
+						<strong>IMPORTE EN LETRAS : </strong>
+						<span t-field="o.amount_text" style="text-transform: uppercase;" />
+					</div>
+
+
+					<!-- Legal box and QR -->
+					<div class="legal-box mt16">
+						<div class="row">
+							<div class="col-9" style="font-size: 12px;">
+								<p style="margin-bottom: 5px;"> Representación impresa de la <strong>
+										<t t-esc="o.pe_doc_name or 'FACTURA ELECTRÓNICA'" />
+									</strong>,
+									visite <strong>
+										<t t-esc="company.website or 'www.sunat.gob.pe'" />
+									</strong>
+								</p>
+								<p>
+									<strong>Resumen:</strong>
+									<span t-field="o.pe_digest" />
+								</p>
+								<div t-if="o.narration" style="margin-top: 10px; font-style: italic;">
+									<strong>Observaciones:</strong>
+									<span t-field="o.narration" />
+								</div>
+								<div t-if="o.tiene_detraccion"
+									style="border: 1px solid #444; padding: 5px; margin-top: 10px; border-radius: 5px;">
+									<strong>OPERACIÓN SUJETA AL SISTEMA DE PAGO DE OBLIGACIONES TRIBUTARIAS</strong><br />
+									Cuenta BN: <span t-field="company.cuenta_detraccion.bank_account_id.acc_number" />
+								</div>
+							</div>
+							<div class="col-3 text-right">
+								<img t-if="o.sunat_qr_code" t-att-src="image_data_uri(o.sunat_qr_code)"
+									style="height: 110px; width: 110px;" />
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="footer">
+				<div class="text-center"
+					style="border-top: 1px solid #444; font-size: 10px; padding-top: 5px;">
+					<div class="text-muted"> Página <span class="page" /> de <span class="topage" /> | Impreso
+						por <strong>
+							<t t-esc="user_id.name" />
+						</strong> el <t
+							t-esc="datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')" />
+					</div>
+				</div>
+			</div>
+		</template>
+
+		<template id="solse_pe_cpe.cpe_print" name="solse_pe_cpe.cpe_print">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-set="lang"
+						t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang" />
+					<t t-call="solse_pe_cpe.cpe_body_print" t-lang="lang" />
+				</t>
+			</t>
+		</template>
+
+		<template id="report_invoice_advanced_main_duplicate" inherit_id="solse_pe_cpe.cpe_body_print"
+			primary="True">
+			<xpath expr="//div[@id='tr_total']" position="after">
+				<t t-set="payments_vals"
+					t-value="o.invoice_payments_widget.get('content', []) if o.invoice_payments_widget else []" />
+				<t t-foreach="payments_vals" t-as="payment_vals">
+					<div class="row no-gutters" style="font-size: 11px; font-style: italic;">
+						<div class="col-7 text-right"> Pagado en <t t-esc="payment_vals['date']"
+								t-options='{"widget": "date"}' />
+						</div>
+						<div class="col-2 text-center">
+							<t t-esc="o.currency_id.symbol" />
+						</div>
+						<div class="col-3 text-right">
+							<span t-esc="'%.2f' % payment_vals['amount']" />
+						</div>
+					</div>
+				</t>
+				<t t-if="len(payments_vals) > 0">
+					<div class="row no-gutters"
+						style="font-size: 12px; font-weight: bold; border-top: 1px dotted #444; margin-top: 3px;">
+						<div class="col-7 text-right">Monto adeudado</div>
+						<div class="col-2 text-center">
+							<t t-esc="o.currency_id.symbol" />
+						</div>
+						<div class="col-3 text-right">
+							<span t-esc="'%.2f' % o.amount_residual" />
+						</div>
+					</div>
+				</t>
+			</xpath>
+		</template>
+
+		<template id="account.report_invoice">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-set="lang"
+						t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang" />
+					<t t-call="solse_pe_cpe.cpe_body_print" t-lang="lang" />
+				</t>
+			</t>
+		</template>
+
+		<template id="account.report_invoice_with_payments">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-set="lang"
+						t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang" />
+					<t t-call="solse_pe_cpe.report_invoice_advanced_main_duplicate" t-lang="lang" />
+				</t>
+			</t>
+		</template>
+
+		<record id="solse_pe_cpe.paperformat_factura_n1" model="report.paperformat">
+			<field name="name">Factura (cpe)</field>
+			<field name="default" eval="True" />
+			<field name="format">custom</field>
+			<field name="page_height">297</field>
+			<field name="page_width">210</field>
+			<field name="orientation">Portrait</field>
+			<field name="margin_top">45</field>
+			<field name="header_spacing">40</field>
+			<field name="margin_bottom">20</field>
+			<field name="margin_left">10</field>
+			<field name="margin_right">10</field>
+			<field name="header_line" eval="False" />
+			<field name="dpi">90</field>
+		</record>
+
+		<record id="account.account_invoices" model="ir.actions.report">
+			<field name="paperformat_id" ref="solse_pe_cpe.paperformat_factura_n1" />
+		</record>
+		<record id="account.account_invoices_without_payment" model="ir.actions.report">
+			<field name="paperformat_id" ref="solse_pe_cpe.paperformat_factura_n1" />
+		</record>
+
+	</data>
+</odoo>

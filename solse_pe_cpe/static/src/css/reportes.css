@@ -1,0 +1,315 @@
+.defaulttable {
+  display: table;
+}
+
+.defaulttable thead {
+  display: table-header-group;
+}
+
+.defaulttable tbody {
+  display: table-row-group;
+}
+
+.defaulttable tfoot {
+  display: table-footer-group;
+}
+
+.defaulttable tbody>tr:hover,
+.defaulttable tbody>tr {
+  display: table-row;
+}
+
+.defaulttable tbody>tr:hover>td,
+.defaulttable tbody>tr>td {
+  display: table-cell;
+}
+
+.defaulttable,
+.defaulttable tbody,
+.defaulttable tbody>tr:hover,
+.defaulttable tbody>tr,
+.defaulttable tbody>tr:hover>td,
+.defaulttable tbody>tr>td,
+.defaulttable tbody>tr:hover>th,
+.defaulttable tbody>tr>th,
+.defaulttable thead>tr:hover>td,
+.defaulttable thead>tr>td,
+.defaulttable thead>tr:hover>th,
+.defaulttable thead>tr>th,
+.defaulttable tfoot>tr:hover>td,
+.defaulttable tfoot>tr>td,
+.defaulttable tfoot>tr:hover>th,
+.defaulttable tfoot>tr>th {
+  background: transparent;
+  border: 0px solid #000;
+  border-spacing: 0px;
+  border-collapse: separate;
+  empty-cells: show;
+  padding: 0px;
+  margin: 0px;
+  outline: 0px;
+  font-size: 100%;
+  color: #000;
+  vertical-align: top;
+  text-align: left;
+  font-family: sans-serif;
+  table-layout: auto;
+  caption-side: top;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+}
+
+
+.factura {
+  color: #585656;
+}
+
+.datos_izquierda {
+  border: 0px;
+  color: red;
+  background-color: red;
+}
+
+.cpe-tabla {
+  padding: 0px 20px 0px 20px;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #fff;
+  line-height: 20px;
+  border: 0px;
+  border-width: 0px;
+  font-size: 13px;
+  color: #585656;
+}
+
+.cpe-tabla table,
+.cpe-tabla caption,
+.cpe-tabla tbody,
+.cpe-tabla tfoot,
+.cpe-tabla thead,
+.cpe-tabla tr,
+.cpe-tabla th,
+.cpe-tabla td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+  color: #585656;
+}
+
+.cpe-tabla tr {
+  padding: 0;
+  border-collapse: separate;
+  border-spacing: 0px;
+  border: 0px;
+  border-width: 0px;
+}
+
+.cpe-tabla span {
+  padding: 0;
+  border-collapse: separate;
+  border-spacing: 0px;
+  border: 0px;
+  border-width: 0px;
+}
+
+.cpe-gris {
+  border-radius: 0px;
+  border: 1px solid #666 !important;
+  border-bottom: 2px solid #666 !important;
+  background: #333;
+  text-align: center;
+  color: #fff;
+  padding: 8px 4px;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.cpe-gris strong {
+  text-align: center;
+  color: #fff;
+
+}
+
+.cpe-celeste {
+  border: 1px solid #ddd !important;
+  background: #00B9DE;
+  text-align: center;
+  color: #fff;
+}
+
+.cpe-celeste strong {
+  text-align: center;
+  color: #fff;
+}
+
+.detalles-precio {
+  font-size: 12px;
+}
+
+.texto-12 {
+  font-size: 12px;
+}
+
+.numeros-texto {
+  color: #5E6060;
+  font-size: 12px;
+  padding: 6px;
+}
+
+.footer-cpe {
+  background: blue;
+  height: 300px;
+  padding: 0;
+  margin: 0;
+}
+
+.nro-cpe {
+  text-align: center;
+  border: 2px solid #a0a0a0 !important;
+  width: 90%;
+  height: 114px;
+  font-size: 15px;
+  margin-left: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(180deg, #f8f8f8 0%, #ffffff 100%);
+}
+
+.nro-cpe span {
+  font-size: 18px;
+  font-weight: bold
+}
+
+.empresa {
+  font-size: 15px;
+}
+
+.empresa strong {
+  font-size: 18px;
+}
+
+.linea-h1 {
+  width: 1px;
+  background: #c0c0c0;
+  height: 100%;
+}
+
+.border-n1 {
+  border: 1px solid #ddd !important;
+  margin-left: 3px;
+  padding: 4px 8px;
+  background-color: #fafafa;
+}
+
+.border-n2 {
+  border: 1.5px solid #00B9DE !important;
+  margin-left: 3px;
+  color: #00B9DE;
+}
+
+.td-n1 {
+  border: 0px;
+  text-align: center;
+  color: gray;
+  margin: 0px;
+  padding: 0px;
+}
+
+/* Estilos para Reporte A4 Formal */
+.factura .page {
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.factura strong {
+  color: #000;
+}
+
+.table-formal {
+  width: 100%;
+  border: 1px solid #333 !important;
+}
+
+.table-formal th {
+  background-color: #333 !important;
+  color: #fff !important;
+  text-transform: uppercase;
+  font-size: 11px;
+  padding: 8px !important;
+}
+
+.table-formal td {
+  padding: 6px !important;
+  font-size: 11px;
+  border-bottom: 1px solid #eee;
+}
+
+.box-formal {
+  border: 1px solid #333;
+  padding: 10px;
+}
+
+/* Estilos para Reporte A4 Premium */
+.nro-cpe-premium {
+  text-align: center;
+  border: 2px solid #333 !important;
+  padding: 15px;
+  background-color: #fcfcfc;
+}
+
+.box-rounded {
+  border: 1px solid #444;
+  padding: 12px;
+  margin-bottom: 15px;
+  background-color: #fff;
+}
+
+.table-premium {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  border: 1px solid #444;
+}
+
+.table-premium th {
+  background-color: #333 !important;
+  color: #fff !important;
+  padding: 10px;
+  font-size: 13px;
+  text-transform: uppercase;
+  text-align: center;
+  border: 1px solid #444;
+}
+
+.table-premium td {
+  padding: 8px;
+  font-size: 13px;
+  border: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.detalles-precio-premium {
+  font-size: 14px;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.total-box {
+  border: 1px solid #444;
+  padding: 8px;
+  font-size: 12px;
+  background-color: #f9f9f9;
+}
+
+.legal-box {
+  border-top: 1px solid #444;
+  padding-top: 15px;
+}

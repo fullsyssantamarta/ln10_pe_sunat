@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Inject PE document type buttons into the PaymentScreen buttons area -->
+    <t t-inherit="point_of_sale.PaymentScreenButtons" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('partner-button')]" position="before">
+            <t t-if="pos.l10n_latam_document_type_ids and pos.l10n_latam_document_type_ids.length">
+                <div class="d-flex gap-2 flex-wrap w-100 mb-2">
+                    <t t-foreach="pos.l10n_latam_document_type_ids" t-as="doc" t-key="doc.id">
+                        <button
+                            class="btn btn-lg lh-lg flex-fill"
+                            t-att-class="currentOrder.get_doc_type_sale() == doc.id ? 'btn-primary' : 'btn-light'"
+                            t-att-data-doc-id="doc.id"
+                            t-on-click="onDocTypeSelect">
+                            <i class="fa fa-file-text-o me-1"/>
+                            <t t-esc="doc.name"/>
+                        </button>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
